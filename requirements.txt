@@ -1,0 +1,9 @@
+Django==1.8.3
+Pillow==2.9.0
+gnureadline==6.3.3
+ipython==3.2.1
+lxml==3.4.4
+nltk==3.0.4
+numpy==1.9.2
+python-docx==0.8.5
+wsgiref==0.1.2

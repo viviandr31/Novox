@@ -1,0 +1,69 @@
+{%extends 'shared/base.html'%} {%block title_blk %} Feature Extraction {%endblock%} 
+
+{%block body_blk %}
+<div class="container" xmlns="http://www.w3.org/1999/html">
+    <form action="{% url 'index' %}" method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Step 1: Select File or Type in Text</h3>
+                 </div>
+                 <div class="panel-body">
+                    <td><textarea name="textarea" id="editor1"></textarea></td>
+                </div>
+                <div class="panel-body">
+                    {% csrf_token %} {{ form.non_field_errors }}{{form.docx.label}}
+                    <input id="id_docx" name="docx" type="file">
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Step 2: Configurations</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            {{form.pos.label}}
+                            <br> {{form.pos}}
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            {{form.bigram.label}}
+                            <br> {{form.bigram}}
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                            {{form.unigram.label}}
+                            <br> {{form.unigram}}
+                        </div>
+                    </div>
+                    <input id='upload_btn' type="submit" class="btn btn-info" value='Upload & Analyze' disabled />
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Step 3: Analysis Result</h3>
+            </div>
+            <div class="panel-body">
+                {%if result%}
+                <a class="btn btn-success" href="{{MEDIA_URL}}{{norm_vector}}">Download {{norm_vector}}</a>
+                <a class="btn btn-success" href="{{MEDIA_URL}}{{count_vector}}">Download {{count_vector}}</a>
+                {%else%} 
+                    <span class="label label-success">No results.</span>
+                {%endif%}
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock%} {%block script_blk%}
+<script type="text/javascript">
+CKEDITOR.replace( 'editor1' );
+$(document).ready(function() {
+    $('input[name=docx]').change(function() {
+        if ($(this).val().match(("docx"))) {
+            $('#upload_btn').prop('disabled', false);
+        }
+    });
+});
+</script>​ {%endblock%}
