@@ -29,14 +29,18 @@
         <div class="col-md-9">
             <div class="container">
                 <div class="row">
-                    <div class="btn btn-primary">analyze</div>
-                    <div class="btn btn-success">upload</div>
-                    <div class="btn btn-warn">save</div>
-                    <div class="btn btn-success">clear</div>
+                    <form action="{% url 'index' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %} {{ form.non_field_errors }}{{form.docx.label}}
+                        <input id="id_docx" name="docx" type="file">
+                        <input id='upload_btn' type="submit" class="btn btn-info" value='Upload & Analyze'/>
+                    </form>
+
                 </div>
                 <div class="row">
                     <textarea>
-                        {{analyzed_results}}
+                        {% for p in analyzed_results %}
+                            {{p}}
+                        {% endfor %}
                     </textarea>
                 </div>
             </div>

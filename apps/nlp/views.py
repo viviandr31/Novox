@@ -2,9 +2,10 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from .forms import DocumentForm
-from tb.analyzer import analyze
+from tb.analyzer2 import analyze2
 from datetime import datetime
-
+import nltk
+import nltk.data
 
 def get_time_tag():
     return datetime.today().strftime("%Y%m%d_%H%M")
@@ -14,17 +15,20 @@ def index(request):
     # Handle file upload
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
+        print form
         if form.is_valid():
             time_tag = get_time_tag()
             norm_vector = 'norm_vector_%s.csv' % time_tag
             count_vector = 'count_vector_%s.csv' % time_tag
-            analyze(request.FILES['docx'],
-                    unigram_text=form.cleaned_data['unigram'],
-                    bigram_text=form.cleaned_data['bigram'],
-                    pos_text=form.cleaned_data['pos'],
-                    outpath_count='media/' + count_vector,
-                    outpath_norm='media/' + norm_vector)
-            result = '%s is processed' % request.FILES['docx']
+            print norm_vector, count_vector, time_tag
+            analyzed_results = analyze2(request.FILES['docx'])
+            # analyze(request.FILES['docx'],
+            #         unigram_text=form.cleaned_data['unigram'],
+            #         bigram_text=form.cleaned_data['bigram'],
+            #         pos_text=form.cleaned_data['pos'],
+            #         outpath_count='media/' + count_vector,
+            #         outpath_norm='media/' + norm_vector)
+            # result = '%s is processed' % request.FILES['docx']
     else:
         form = DocumentForm()  # A empty, unbound form
         result = None
