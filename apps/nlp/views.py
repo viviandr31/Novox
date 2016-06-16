@@ -15,12 +15,7 @@ def index(request):
     # Handle file upload
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
-        print form
         if form.is_valid():
-            time_tag = get_time_tag()
-            norm_vector = 'norm_vector_%s.csv' % time_tag
-            count_vector = 'count_vector_%s.csv' % time_tag
-            print norm_vector, count_vector, time_tag
             analyzed_results = analyze2(request.FILES['docx'])
             # analyze(request.FILES['docx'],
             #         unigram_text=form.cleaned_data['unigram'],
@@ -34,7 +29,7 @@ def index(request):
         result = None
         norm_vector = ''
         count_vector = ''
-        analyzed_results = 'fsdiofj'
+        analyzed_results = 'copy and paste your document here'
 
     # Render list page with the documents and the form
     return render_to_response(

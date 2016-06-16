@@ -8,10 +8,74 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
     {%block css_blk %}{%endblock%}
+    <style>
+        hr {
+            display: block;
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+            margin-left: auto;
+            margin-right: auto;
+            border-style: inset;
+            border-width: 2px;
+        }
+
+        .alert {
+            padding: 20px;
+            background-color: #ff9800;
+            color: black;
+            opacity: 1;
+            transition: opacity 0.6s;
+            margin-bottom: 15px;
+        }
+
+
+        .closebtn {
+            margin-left: 15px;
+            color: white;
+            font-weight: bold;
+            float: right;
+            font-size: 22px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .closebtn:hover {
+            color: black;
+        }
+
+    </style>
 </head>
 
 <body>
     {%block body_blk%} {%endblock%}
+    <script>
+    var close = document.getElementsByClassName("closebtn");
+    var i;
+
+    for (i = 0; i < close.length; i++) {
+        close[i].onclick = function(){
+            var div = this.parentElement;
+            div.style.opacity = "0";
+            setTimeout(function(){ div.style.display = "none"; }, 600);
+        }
+    }
+    function setfeaturecolor(a) {
+        var elements = document.getElementsByClassName(a), i, len;
+        for (i = 0, len = elements.length; i < len; i++) {
+            elements[i].style.color = '#005ce6';
+         }
+    }
+
+    function onMouseOut(a) {
+      var elements = document.getElementsByClassName(a), i, len;
+
+      for (i = 0, len = elements.length; i < len; i++) {
+        elements[i].style.color = 'black';
+       }
+    }
+
+    </script>
 </body>
 <footer>
 <script type="text/JavaScript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js" ></script>

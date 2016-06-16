@@ -112,10 +112,11 @@ def tag(text):
 def tagwords(text, features, featurename, textlist):
     # taglist = []
     newtext = ' ' + re.sub(r'[,.;:?!()""\[\]{}<>]', ' ', text).lower()
-    # print newtext
+    #print 'newtext', newtext
     for word in features:
         if ' ' + word + ' ' in newtext:
             textlist.append((word, featurename))
+    #print 'tagwords', textlist
     return textlist
 
 
@@ -164,7 +165,20 @@ def analyze2(infile):
         bigdiff_feature.append(words)
 
     df_new['BigDiffFeatures'] = ['|'.join(diff) for diff in bigdiff_feature]
-    print bigdiff_feature
+    print 'big difference feature ', bigdiff_feature
+
+    # format the html for showing the big difference feature
+    show_feature = []
+    para = 0
+    for features in bigdiff_feature:
+        s = []
+        for feature in features:
+            classname = feature + '%s' % para
+            str = '<span onMouseOver="setfeaturecolor(\'%s\')" onmouseout="onMouseOut(\'%s\')" class ="%s">%s</span>' % (classname, classname, classname, feature)
+            s.append(str)
+        s = ', '.join(s)
+        show_feature.append(s)
+        para +=1
 
     # output the df_new as a csv file
 
@@ -194,6 +208,7 @@ def analyze2(infile):
     # print newdoc
 
     tagged_text = [tag(line) for line in newdoc]
+    # print tagged_text
 
     words = []
     for m in range(len(bigdiff_feature)):
@@ -209,6 +224,33 @@ def analyze2(infile):
                     if b == tags and a not in dic[tags]:
                         dic[tags].append(a)
         words.append(dic)
+
+    para = 0
+    for word_dict in words:
+        dkeys = word_dict.keys()
+        #print "paragraph %s" % para
+        # print doc[para]
+        for dkey in dkeys:
+            for hiword in word_dict[dkey]:
+                if hiword == '.':
+                    continue
+                classname = dkey + '%s' % para
+                doc[para] = re.sub(r'\b%s\b' % hiword, '<span class ="%s" ><b>%s</b></span>' % (classname, hiword), doc[para], flags=re.UNICODE)
+                doc[para+1] = re.sub(r'\b%s\b' % hiword, '<span class ="%s"><b>%s</b></span>' % (classname, hiword), doc[para+1], flags=re.UNICODE)
+        para = para + 1
+
+    alerts = []
+    for i in range(len(bigdiff_feature)):
+        content = '<div class="alert"> <span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span>Paragraph above is very different on %s from the paragraph below .</div>' % show_feature[i]
+        alerts.append(content)
+
+    result =[]
+    for i in range(len(words)):
+        result.append(doc[i])
+        if (words[i]!={}):
+            result.append(alerts[i])
+    result.append(doc[i+1])
+
     print words
 
-    return newdoc
+    return result
