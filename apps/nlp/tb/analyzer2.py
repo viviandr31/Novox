@@ -167,18 +167,6 @@ def analyze2(infile):
     df_new['BigDiffFeatures'] = ['|'.join(diff) for diff in bigdiff_feature]
     print 'big difference feature ', bigdiff_feature
 
-    # format the html for showing the big difference feature
-    show_feature = []
-    para = 0
-    for features in bigdiff_feature:
-        s = []
-        for feature in features:
-            classname = feature + '%s' % para
-            str = '<span onMouseOver="setfeaturecolor(\'%s\')" onmouseout="onMouseOut(\'%s\')" class ="%s">%s</span>' % (classname, classname, classname, feature)
-            s.append(str)
-        s = ', '.join(s)
-        show_feature.append(s)
-        para +=1
 
     # output the df_new as a csv file
 
@@ -234,15 +222,52 @@ def analyze2(infile):
             for hiword in word_dict[dkey]:
                 if hiword == '.':
                     continue
-                classname = dkey + '%s' % para
-                doc[para] = re.sub(r'\b%s\b' % hiword, '<span class ="%s" ><b>%s</b></span>' % (classname, hiword), doc[para], flags=re.UNICODE)
-                doc[para+1] = re.sub(r'\b%s\b' % hiword, '<span class ="%s"><b>%s</b></span>' % (classname, hiword), doc[para+1], flags=re.UNICODE)
+                classname = dkey + '_' + '%s' % para
+                doc[para] = re.sub(r'\b%s\b' % hiword, '<span class ="%s">%s</span>' % (classname, hiword), doc[para], flags=re.UNICODE)
+                a = para +1
+                classname = dkey + '_' + '%s' % a
+                doc[para+1] = re.sub(r'\b%s\b' % hiword, '<span class ="%s">%s</span>' % (classname, hiword), doc[para+1], flags=re.UNICODE)
         para = para + 1
 
+    # # format the html for showing the big difference feature
+    # show_feature = []
+    # para = 0
+    # for features in bigdiff_feature:
+    #     s = []
+    #     for feature in features:
+    #         if feature != 'Total Words':
+    #             classname = feature + '_' + '%s' % para
+    #             featureclass = classname + 'f'
+    #             str = '<span onMouseOver="setfeaturecolor(\'%s\')" onmouseout="onMouseOut(\'%s\')" id ="%s">%s</span>' % (
+    #             classname, classname, featureclass, feature)
+    #             s.append(str)
+    #     s = ', '.join(s)
+    #     show_feature.append(s)
+    #     para += 1
+    # print 'show feature', show_feature
+    # print 'show feature length', len(show_feature)
+
     alerts = []
-    for i in range(len(bigdiff_feature)):
-        content = '<div class="alert"> <span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span>Paragraph above is very different on %s from the paragraph below .</div>' % show_feature[i]
+    para = 0
+    for features in bigdiff_feature:
+        content =''
+        s =[]
+        for feature in features:
+            if feature == 'Total Words':
+                content = '<div class="alert"> <span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span>The paragraph above has longer/shorter sentences/words than the one below. </div>'
+            else:
+                classname = feature + '_' + '%s' % para
+                featureclass = classname + 'f'
+                str = '<span onMouseOver="setfeaturecolor(\'%s\')" onmouseout="onMouseOut(\'%s\')" id ="%s">%s</span>' % (
+                    classname, classname, featureclass, feature)
+                s.append(str)
+        s = ', '.join(s)
+        if s:
+            content += '<div class="alert"> <span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span>The paragraph above has many more/fewer %s than the one below.</div>' % s
         alerts.append(content)
+        para +=1
+    #print 'alerts', alerts
+    print 'alerts length', len(alerts)
 
     result =[]
     for i in range(len(words)):
