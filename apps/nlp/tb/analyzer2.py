@@ -1,5 +1,6 @@
 import nltk
-# import nltk.data
+import nltk.data
+from nltk.corpus import brown
 from docx import *
 import csv
 import re
@@ -8,6 +9,11 @@ import scipy
 from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
 import operator
+import os
+import pickle
+import numpy
+import math
+
 
 # path of the MS word document
 # infile = 'Test3-SEP-article.docx'
@@ -42,8 +48,6 @@ unnecessary_list = unnecessary_text.split('\n')
 
 
 # read the words in the word document
-
-
 def getWord(document):
     doc = []
     for paragraph in document.paragraphs:

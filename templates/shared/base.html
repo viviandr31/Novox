@@ -61,18 +61,46 @@
         }
     }
     function setfeaturecolor(a) {
-        var elements = document.getElementsByClassName(a), i, len;
+        var res = a.split("_");
+        var num = Number(res[1]) + 1;
+        var classname0 = res[0] + '_' + res[1];
+        var classname1 = res[0] + '_' + num.toString();
+        var featureclass = classname0 + 'f';
+        var elements = document.getElementsByClassName(classname0), i, len;
         for (i = 0, len = elements.length; i < len; i++) {
             elements[i].style.color = '#005ce6';
+            elements[i].style.fontWeight = 'bold';
          }
+        var elements = document.getElementsByClassName(classname1);
+        for (i = 0, len = elements.length; i < len; i++) {
+            elements[i].style.color = '#005ce6';
+            elements[i].style.fontWeight = 'bold';
+         }
+        var element = document.getElementById(featureclass);
+        element.style.color = '#005ce6';
+        element.style.fontWeight = 'bold';
     }
 
     function onMouseOut(a) {
-      var elements = document.getElementsByClassName(a), i, len;
-
+      var res = a.split("_");
+      var num = Number(res[1]) +1;
+      var classname0 = res[0] + '_' + res[1];
+      var classname1 = res[0] + '_' + num.toString();
+      var featureclass = classname0 + 'f';
+      var elements = document.getElementsByClassName(classname0), i, len;
       for (i = 0, len = elements.length; i < len; i++) {
         elements[i].style.color = 'black';
+        elements[i].style.fontWeight = 'normal';
        }
+
+      var elements = document.getElementsByClassName(classname1);
+      for (i = 0, len = elements.length; i < len; i++) {
+         elements[i].style.color = 'black';
+         elements[i].style.fontWeight = 'normal';
+       }
+      var element = document.getElementById(featureclass);
+      element.style.color = 'black';
+      element.style.fontWeight = 'normal';
     }
 
     </script>

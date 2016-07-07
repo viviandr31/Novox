@@ -2,7 +2,7 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from .forms import DocumentForm
-from tb.analyzer2 import analyze2
+from tb.analyzer3 import analyze3
 from datetime import datetime
 import nltk
 import nltk.data
@@ -16,7 +16,7 @@ def index(request):
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
-            analyzed_results = analyze2(request.FILES['docx'])
+            analyzed_results = analyze3(request.FILES['docx'])
             # analyze(request.FILES['docx'],
             #         unigram_text=form.cleaned_data['unigram'],
             #         bigram_text=form.cleaned_data['bigram'],
@@ -29,7 +29,7 @@ def index(request):
         result = None
         norm_vector = ''
         count_vector = ''
-        analyzed_results = 'copy and paste your document here'
+        analyzed_results = ''
 
     # Render list page with the documents and the form
     return render_to_response(
