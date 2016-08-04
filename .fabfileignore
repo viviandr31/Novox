@@ -1,0 +1,16 @@
+#注释
+*.pyc
+.git
+.idea
+server
+*.log
+*.pid
+*.sock
+README.md
+tests
+.coverage
+htmlcov
+migrations
+*.DS_Store
+logs
+*.pem

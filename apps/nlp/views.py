@@ -2,7 +2,7 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from .forms import DocumentForm
-from tb.analyzer3 import analyze3
+from tb.analyzer4 import analyze3
 from datetime import datetime
 import nltk
 import nltk.data

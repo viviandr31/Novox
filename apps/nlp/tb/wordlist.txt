@@ -1,0 +1,231 @@
+a
+about
+above
+after
+all
+although
+am
+among
+an
+and
+another
+any
+anybody
+anyone
+anything
+are
+around
+as
+at
+be
+because
+before
+behind
+below
+beside
+between
+both
+but
+by
+can
+cos
+do
+down
+each
+either
+enough
+every
+everybody
+everyone
+everything
+few
+following
+for
+from
+have
+he
+her
+him
+i
+if
+in
+including
+inside
+into
+is
+it
+its
+latter
+less
+like
+little
+lots
+many
+me
+more
+most
+much
+must
+my
+near
+need
+neither
+no
+nobody
+none
+nor
+nothing
+of
+off
+on
+once
+one
+onto
+opposite
+or
+our
+outside
+over
+own
+past
+per
+plenty
+plus
+regarding
+same
+several
+she
+should
+since
+so
+some
+somebody
+someone
+something
+such
+than
+that
+the
+their
+them
+these
+they
+this
+those
+though
+through
+till
+toward
+towards
+under
+unless
+unlike
+until
+up
+upon
+us
+used
+via
+we
+what
+whatever
+when
+where
+whether
+which
+while
+who
+whoever
+whom
+whose
+will
+with
+within
+without
+worth
+would
+yes
+you
+your
+.
+?
+!
+:
+;
+,
+-
+(
+)
+[
+]
+{
+}
+<
+>
+``
+'
+/
+almost
+apparently
+comparatively
+fairly
+nearly
+partially
+predominantly
+presumably
+rather
+relatively
+seemingly
+somewhat
+to a certain degree
+to some extent
+very
+highly
+extremely
+including
+also
+furthermore
+despite
+nonetheless
+nevertheless
+while
+since
+once
+then
+before
+still
+sort of
+that is
+in addition
+notice that
+in general
+more generally
+owing to
+even though
+so to speak
+i would argue
+in other words
+which is to say
+on the other hand
+then there is
+as a result
+for example
+examples include
+an example being
+as an example
+is one example of
+instance
+such as
+as in
+e g
+as illustrated by
+as seen in
+which is made apparent when
+these include
+particularly
+especially
+this is illustrated
+by way of illustration
+in particular
+as a case in point
+namely

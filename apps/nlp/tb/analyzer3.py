@@ -115,13 +115,43 @@ def word_features(text, wordlist):
 
 
 # Bieber features
+def bieber(text_tagged):
+	features = {}
+	thatComplement = 0
+	publicVerb = 0
+	privateVerb = 0
+	firstPersonPronouns = 0
+	possibilityModal = 0
+	downtoners = 0
+	AgentlessPassives = 0
+	for i in range(len(text_tagged)):
+		if text_tagged[i][0].lower() == 'that' and text_tagged[i][1] == 'IN':
+			thatComplement+=1
+		if text_tagged[i][0].lower() in ['affirm', 'announce', 'boast', 'confirm', 'decalre']:
+			publicVerb+=1
+		if text_tagged[i][0].lower() in ['believe', 'know', 'realize', 'understand']:
+			privateVerb+=1
+		if text_tagged[i][0].lower() in ['i','me','my','mine','myself','we','our','ours','us','ourselves']:
+			firstPersonPronouns+=1
+		if text_tagged[i][0].lower() in ['may','might','could','must']:
+			possibilityModal+=1
+		if text_tagged[i][0].lower() in ['hardly','slightly','barely','just','somewhat']:
+			downtoners+=1
+		if text_tagged[i][0].lower().endswith('ish') and len(text_tagged[i][0].lower())>5:
+			downtoners+=1
+	for i in range(len(text_tagged)-1):
+		if text_tagged[i][0].lower() in ['have','has','had'] and text_tagged[i+1][0].lower() == 'to':
+			possibilityModal+=1
+		if text_tagged[i][0].lower() + ' ' + text_tagged[i+1][0].lower() in ['a bit','a little','only just''kind of','sort of','little bit','tiny bit']:
+			downtoners+=1
 
-def bieber(tagged):
-    temp = {}
-    temp['PerfectAspect'] = 0
-    for i in range(len(tagged)):
-        if tagged[i][0] in ['have', 'has', 'had'] and tagged[i + 1][1] == 'VBN':        temp['PerfectAspect'] += 1
-    return temp
+	features['thatComplement'] = thatComplement
+	features['publicVerb'] = publicVerb
+	features['privateVerb'] = privateVerb
+	features['firstPersonPronouns'] = firstPersonPronouns
+	features['possibilityModal'] = possibilityModal
+	features['downtoners'] = downtoners
+	return features
 
 
 # Compute average word length per paragraph
@@ -149,12 +179,13 @@ def ari_score(text):
 
 
 # Output a CSV document of the count vector
-def cvswrite_count(featuresets1, featuresets2, text, outpath):
+def cvswrite_count(featuresets1, featuresets2, featuresets3, text, outpath):
     fp = open(outpath, "wb")
     writer = csv.writer(fp)
     # pattern = re.compile('.*[^a-z].*')
     # write the feature names
-    featurenames = sorted(featuresets1[0].keys()) + sorted(featuresets2[0].keys()) + otherfeature
+    featurenames = sorted(featuresets1[0].keys()) + sorted(featuresets2[0].keys()) + sorted(
+        featuresets3[0].keys()) + otherfeature
     writer.writerow(featurenames)
     # write values for each paragraph as a row
     for i in range(0, len(featuresets1)):
@@ -165,7 +196,9 @@ def cvswrite_count(featuresets1, featuresets2, text, outpath):
         # write values of example words features
         for key in sorted(featuresets2[0].keys()):
             featureline.append(str(featuresets2[i][key]))
-            # write values of unnecessary words features
+        # write values of bieber features
+        for key in sorted(featuresets3[0].keys()):
+            featureline.append(str(featuresets3[i][key]))
             # for key in sorted(featuresets3[0].keys()):
             # featureline.append(str(featuresets3[i][key]))
         # write word count for each paragraph
@@ -184,10 +217,9 @@ def cvswrite_count(featuresets1, featuresets2, text, outpath):
         # write content of the paragraph
         featureline.append(text[i][0].encode('utf-8'))
         # write author
-        featureline.append(0)
+        #featureline.append(str(author_true[i]))
         writer.writerow(featureline)
     fp.close()
-
 
 def analyze3(infile):
 
@@ -231,10 +263,10 @@ def analyze3(infile):
 
     # Get words feature
     featuresets2 = [(word_features(line, wordlist)) for line, style, bold, italic in doc]
-
+    featuresets3 = [(bieber(line)) for line in text_tagged]
     # if all the featuresets have equal length with length of the document, then write the csv file
     if len(featuresets1) == len(featuresets2):
-        cvswrite_count(featuresets1, featuresets2, doc, outpath_count)
+         cvswrite_count(featuresets1, featuresets2, featuresets3, doc, outpath_count)
 
     # drop the feature that occurs only once in a document
     df_ratio = pd.read_csv(outpath_count, sep=',')
@@ -295,22 +327,22 @@ def analyze3(infile):
     print len(df_new), len(text_tagged)
     for i in range(0, len(df_new)):
         # print 'new'
-        wordlist = {}
+        dic = {}
         bigdiffwords = []
         for j in range(feature_count):
             if abs(df_new.ix[:, 0:len(df_new.columns) - 4].values[i][j]) >= 2 and df_new['CosineSimilarity'][i] < 0:
-                wordlist[list(df_new)[j]] = [df_new.ix[:, 0:len(df_new.columns) - 4].values[i][j]]
+                dic[list(df_new)[j]] = [df_new.ix[:, 0:len(df_new.columns) - 4].values[i][j]]
                 if list(df_new)[j] in postags:
                     for m in range(len(text_tagged[i])):
                         if text_tagged[i][m][1] == list(df_new)[j]:
-                            wordlist[list(df_new)[j]].append(text_tagged[i][m][0])
+                            dic[list(df_new)[j]].append(text_tagged[i][m][0])
                     for n in range(len(text_tagged[i + 1])):
                         if text_tagged[i + 1][n][1] == list(df_new)[j]:
-                            wordlist[list(df_new)[j]].append(text_tagged[i + 1][n][0])
+                            dic[list(df_new)[j]].append(text_tagged[i + 1][n][0])
                 else:
-                    wordlist[list(df_new)[j]].append(list(df_new)[j])
-        words.append(wordlist)
-        templist = sorted(wordlist.items(), key=operator.itemgetter(1), reverse=True)
+                    dic[list(df_new)[j]].append(list(df_new)[j])
+        words.append(dic)
+        templist = sorted(dic.items(), key=operator.itemgetter(1), reverse=True)
         for pair in templist:
             bigdiffwords.append(pair[0])
         # print pair[0],pair[1]
