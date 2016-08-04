@@ -122,91 +122,75 @@ def word_features(text, wordlist):
     return features
 
 
-# Bieber features
-def bieber(text_tagged, word_tag_list):
-    features = {}
-    thatComplement = 0
-    adjComplement = 0
-    publicVerb = 0
-    privateVerb = 0
-    firstPersonPronouns = 0
-    possibilityModal = 0
-    downtoners = 0
-    contractionwords = 0
-    # bieber feature words are unigram
-    for i in range(len(text_tagged)):
-        if text_tagged[i][0].lower() in ['complain', 'complaining', 'complained', 'complains', 'explain', 'explains',
-                                         'explaining', 'explained', 'promise', 'promises', 'promising', 'promised',
-                                         'affirm', 'announce', 'boast', 'confirm', 'declare', 'affirms', 'announces',
-                                         'boasts', 'confirms', 'declares', 'affirmed', 'announced', 'boasted',
-                                         'confirmed', 'declared', 'affirming', 'announcing', 'boasting', 'confirming',
-                                         'declaring']:
-            publicVerb += 1
-            word_tag_list[i][1].append('publicVerb')
-        if text_tagged[i][0].lower() in ['believe', 'know', 'realize', 'understand', 'believes', 'knows', 'realizes',
-                                         'understands', 'believed', 'knew', 'realized', 'understood', 'believing',
-                                         'knowing', 'realizing', 'understanding', 'known', 'think', 'thinks',
-                                         'thinking', 'thought']:
-            privateVerb += 1
-            word_tag_list[i][1].append('privateVerb')
-        if text_tagged[i][0].lower() in ['i', 'me', 'my', 'mine', 'myself', 'we', 'our', 'ours', 'us', 'ourselves']:
-            firstPersonPronouns += 1
-            word_tag_list[i][1].append('firstPersonPronouns')
-        if text_tagged[i][0].lower() in ['may', 'might', 'could', 'must']:
-            possibilityModal += 1
-            word_tag_list[i][1].append('possibilityModal')
-        if text_tagged[i][0].lower() in ['hardly', 'slightly', 'barely', 'just', 'somewhat']:
-            downtoners += 1
-            word_tag_list[i][1].append('downtoners')
-        if text_tagged[i][0].lower().endswith('ish') and text_tagged[i][1] in ['JJ', 'RB']:
-            downtoners += 1
-            word_tag_list[i][1].append('downtoners')
-        if text_tagged[i][0].lower() in ['n\'t', '\'s', '\'re', '\'ve', '\'d', '\'ll', '\'m']:
-            contractionwords += 1
-            word_tag_list[i][1].append('contractionwords')
-    # bieber feature words are bigram like 'have to'
-    for i in range(len(text_tagged) - 1):
-        if text_tagged[i][1] in ['VB', 'VBD', 'VBG', 'VBN', 'VBP', 'VBZ'] and text_tagged[i + 1][
-            0].lower() == 'that' and text_tagged[i + 1][1] == 'IN':
-            thatComplement += 1
-            # add word tag see tag_word()
-            word_tag_list[i][1].append('thatComplement')
-            word_tag_list[i + 1][1].append('thatComplement')
-        if text_tagged[i][0].lower() in ['have', 'has', 'had', 'having'] and text_tagged[i + 1][0].lower() == 'to':
-            possibilityModal += 1
-            word_tag_list[i][1].append('possibilityModal')
-            word_tag_list[i + 1][1].append('possibilityModal')
-        if text_tagged[i][0].lower() + ' ' + text_tagged[i + 1][0].lower() in ['a bit', 'a little',
-                                                                               'only just''kind of', 'sort of',
-                                                                               'little bit', 'tiny bit']:
-            downtoners += 1
-            word_tag_list[i][1].append('downtoners')
-            word_tag_list[i + 1][1].append('downtoners')
-        if text_tagged[i][1] in ['JJ', 'JJR', 'JJS'] and text_tagged[i + 1][0].lower() == 'that' and text_tagged[i + 1][
-            1] == 'IN':
-            adjComplement += 1
-            word_tag_list[i][1].append('adjComplement')
-            word_tag_list[i + 1][1].append('adjComplement')
-    # bieber feature words are trigram like "tell him that"
-    for i in range(len(text_tagged) - 2):
-        if text_tagged[i][1] in ['VB', 'VBD', 'VBG', 'VBN', 'VBP', 'VBZ'] and text_tagged[i + 1][1] in ['NN', 'NNS',
-                                                                                                        'NNP', 'RB',
-                                                                                                        'PRP', 'RP'] and \
-                        text_tagged[i + 2][0].lower() == 'that' and text_tagged[i + 2][1] == 'IN':
-            thatComplement += 1
-            word_tag_list[i][1].append('thatComplement')
-            word_tag_list[i + 1][1].append('thatComplement')
-            word_tag_list[i + 2][1].append('thatComplement')
-    # make into feature list
-    features['thatComplement'] = thatComplement
-    features['adjComplement'] = adjComplement
-    features['publicVerb'] = publicVerb
-    features['privateVerb'] = privateVerb
-    features['firstPersonPronouns'] = firstPersonPronouns
-    features['possibilityModal'] = possibilityModal
-    features['downtoners'] = downtoners
-    features['contractionwords'] = contractionwords
-    return features
+def bieber(text_tagged,word_tag_list):
+	features = {}
+	thatComplement = 0
+	adjComplement = 0
+	publicVerb = 0
+	privateVerb = 0
+	firstPersonPronouns = 0
+	possibilityModal = 0
+	downtoners = 0
+	contractionwords = 0
+	# bieber feature words are unigram
+	for i in range(len(text_tagged)):
+		if text_tagged[i][0].lower() in public_verbs:
+			publicVerb+=1
+			word_tag_list[i][1].append('publicVerb')
+		if text_tagged[i][0].lower() in private_verbs:
+			privateVerb+=1
+			word_tag_list[i][1].append('privateVerb')
+		if text_tagged[i][0].lower() in ['i','me','my','mine','myself','we','our','ours','us','ourselves']:
+			firstPersonPronouns+=1
+			word_tag_list[i][1].append('firstPersonPronouns')
+		if text_tagged[i][0].lower() in ['may','might','could','must']:
+			possibilityModal+=1
+			word_tag_list[i][1].append('possibilityModal')
+		if text_tagged[i][0].lower() in ['hardly','slightly','barely','just','somewhat']:
+			downtoners+=1
+			word_tag_list[i][1].append('downtoners')
+		if text_tagged[i][0].lower() in ish_words:
+			downtoners+=1
+			word_tag_list[i][1].append('downtoners')
+		if text_tagged[i][0].lower() in ['n\'t','\'s','\'re','\'ve','\'d','\'ll','\'m']:
+			contractionwords+=1
+			word_tag_list[i][1].append('contractionwords')
+	# bieber feature words are bigram like 'have to'
+	for i in range(len(text_tagged)-1):
+		if text_tagged[i][1] in ['VB','VBD','VBG','VBN','VBP','VBZ'] and text_tagged[i+1][0].lower() == 'that' and text_tagged[i+1][1] == 'IN':
+			thatComplement+=1
+			# add word tag see tag_word()
+			word_tag_list[i][1].append('thatComplement')
+			word_tag_list[i+1][1].append('thatComplement')
+		if text_tagged[i][0].lower() in ['have','has','had','having'] and text_tagged[i+1][0].lower() == 'to':
+			possibilityModal+=1
+			word_tag_list[i][1].append('possibilityModal')
+			word_tag_list[i+1][1].append('possibilityModal')
+		if text_tagged[i][0].lower() + ' ' + text_tagged[i+1][0].lower() in ['a bit','a little','only just''kind of','sort of','little bit','tiny bit']:
+			downtoners+=1
+			word_tag_list[i][1].append('downtoners')
+			word_tag_list[i+1][1].append('downtoners')
+		if text_tagged[i][1] in ['JJ','JJR','JJS'] and text_tagged[i+1][0].lower() == 'that' and text_tagged[i+1][1] == 'IN':
+			adjComplement+=1
+			word_tag_list[i][1].append('adjComplement')
+			word_tag_list[i+1][1].append('adjComplement')
+	# bieber feature words are trigram like "tell him that"
+	for i in range(len(text_tagged)-2):
+		if text_tagged[i][1] in ['VB','VBD','VBG','VBN','VBP','VBZ'] and text_tagged[i+1][1] in ['NN','NNS','NNP','RB','PRP','RP'] and text_tagged[i+2][0].lower() == 'that' and text_tagged[i+2][1] == 'IN':
+			thatComplement+=1
+			word_tag_list[i][1].append('thatComplement')
+			word_tag_list[i+1][1].append('thatComplement')
+			word_tag_list[i+2][1].append('thatComplement')
+        # make into feature list
+	features['thatComplement'] = thatComplement
+	features['adjComplement'] = adjComplement
+	features['publicVerb'] = publicVerb
+	features['privateVerb'] = privateVerb
+	features['firstPersonPronouns'] = firstPersonPronouns
+	features['possibilityModal'] = possibilityModal
+	features['downtoners'] = downtoners
+	features['contractionwords'] = contractionwords
+	return features
 
 
 # detect agentless passive voice
@@ -323,6 +307,7 @@ def analyze3(infile):
 
 
     tags=postags + ['thatComplement','publicVerb', 'privateVerb', 'firstPersonPronouns', 'possibilityModal','downtoners','contractionwords','agentlessPassive']
+    global public_verbs, private_verbs, ish_words
 
     # bipos_file = open('bipos.txt','r')
     # bipos_text = bipos_file.read()
@@ -338,28 +323,28 @@ def analyze3(infile):
     #print wordlist
 
 
-    # # read the privateverbs.txt, containing the private verbs
-    # prverb_file = 'apps/nlp/tb/privateverbs.txt'
-    # prverb_filef = open(prverb_file, 'r')
-    # prverb_text = prverb_filef.read()
-    # private_verbs = prverb_text.splitlines()
-    # private_verbs = list(set(private_verbs))
-    # # print len(private_verbs)
-    #
-    # # read the publicverbs.txt, containing the public verbs
-    # puberb_file = 'apps/nlp/tb/publicverbs.txt'
-    # puberb_filef = open(puberb_file, 'r')
-    # puberb_text = puberb_filef.read()
-    # public_verbs = puberb_text.splitlines()
-    # public_verbs = list(set(public_verbs))
-    # # print len(public_verbs)
-    #
-    # # read the ishwords.txt, containing the ish downtoners
-    # ish_file = 'apps/nlp/tb/ishwords.txt'
-    # ish_filef = open(ish_file, 'r')
-    # ish_text = ish_filef.read()
-    # ish_words = ish_text.splitlines()
-    # ish_words = list(set(ish_words))
+    # read the privateverbs.txt, containing the private verbs
+    prverb_file = 'apps/nlp/tb/privateverbs.txt'
+    prverb_filef = open(prverb_file, 'r')
+    prverb_text = prverb_filef.read()
+    private_verbs = prverb_text.splitlines()
+    private_verbs = list(set(private_verbs))
+    # print len(private_verbs)
+
+    # read the publicverbs.txt, containing the public verbs
+    puberb_file = 'apps/nlp/tb/publicverbs.txt'
+    puberb_filef = open(puberb_file, 'r')
+    puberb_text = puberb_filef.read()
+    public_verbs = puberb_text.splitlines()
+    public_verbs = list(set(public_verbs))
+    # print len(public_verbs)
+
+    # read the ishwords.txt, containing the ish downtoners
+    ish_file = 'apps/nlp/tb/ishwords.txt'
+    ish_filef = open(ish_file, 'r')
+    ish_text = ish_filef.read()
+    ish_words = ish_text.splitlines()
+    ish_words = list(set(ish_words))
 
     # generate brown words freq dist
 
@@ -588,7 +573,7 @@ def analyze3(infile):
 
     #add the word into paragraph
     doc1 = []
-    punctuations = '''!()-[]{};:'"\,<>./?@#$%^&*_~'''
+    punctuations = '''``''!()-[]{};:'"\,<>./?@#$%^&*_~'''
     for i in range(len(word_tagged_list)):
         text = ''
         for pair in word_tagged_list[i]:
