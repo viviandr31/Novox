@@ -479,20 +479,6 @@ def analyze3(infile):
         bigdiff_dic.append(dic)
     # print the big diff features into a feature
     df_new['BigDiffFeatures'] = ['|'.join(diff) for diff in bigdiff_feature]
-    print bigdiff_feature
-    print bigdiff_dic
-
-    # output the df_new as a csv file
-    # df_new.to_csv(path + '/' + filename + '/' + 'similarity.csv')
-
-    # the words to highlight as big difference
-    #print word_tagged_list
-
-    # output the df_new as a csv file
-    # df_new.to_csv(path + '/' + filename + '/' + 'similarity.csv')
-
-    # the words to highlight as big difference
-    #print 'word_tagged_list', word_tagged_list
 
     # para = 0
     # for word_dict in word_tagged_list:
@@ -531,8 +517,6 @@ def analyze3(infile):
                                 w = s[1].split('<')
                                 preclass = s[0].split('"')
                                 pair[0] = '<span class ="%s %s">%s</span>' % (preclass[1], classname, w[0])
-                                #print 's', s
-                                #print 'pair[0]', pair[0]
                     for pair in word_tagged_list[i + 1]:
                         if word in pair[1]:
                             a = para + 1
@@ -544,8 +528,6 @@ def analyze3(infile):
                                 w = s[1].split('<')
                                 preclass = s[0].split('"')
                                 pair[0] = '<span class ="%s %s">%s</span>' % (preclass[1], classname, w[0])
-                                #print 's', s
-                                #print 'pair[0]', pair[0]
                 else:
                     for pair in word_tagged_list[i]:
                         if word == pair[0].lower():
@@ -569,16 +551,23 @@ def analyze3(infile):
                                 preclass = s[0].split('"')
                                 pair[0] = '<span class ="%s %s">%s</span>' % (preclass[1], classname, w[0])
             para = para + 1
-    #print 'new word_tagged_list', word_tagged_list
 
-    #add the word into paragraph
+    #join the word into paragraph
     doc1 = []
-    punctuations = '''``''!()-[]{};:'"\,<>./?@#$%^&*_~'''
+    punctuations = '''''!()-[]{};:'"\,<>./?@#$%^&*_~'''
     for i in range(len(word_tagged_list)):
         text = ''
         for pair in word_tagged_list[i]:
+            match = re.search('(\')(\w)+', pair[0])
             if pair[0] not in punctuations:
-                text += " "+ pair[0]
+                if match:
+                    text += pair[0]
+                    print 'match', match
+                    print 'pair[0]', pair[0]
+                else:
+                    if pair[0] == '``':
+                        pair[0] = '\'\''
+                    text += " " + pair[0]
             else:
                 text += pair[0]
         doc1.append(text)
@@ -588,6 +577,12 @@ def analyze3(infile):
     #create alert boxes
     alerts = []
     para = 0
+    feature_dictionary = {'CC':'Coordinatiing conjunction', 'CD':'Cardinal number', 'DT':'Deteminer', 'EX':'Existential there', 'FW':'Foreign word', 'IN':'Preposition or Subordinating conjunction',
+                          'JJ':'Adjective', 'JJR':'Comparative Adjective', 'JJS':'Superlative Adjective', 'LS':'List item marker', 'MD':'Modal', 'NN':'Noun, sigualr or mass', 'NNS':'Plural Noun',
+                          'NNP':'Proper noun, singular', 'NNPS':'Proper noun, plural', 'PDT':'Predeterminer', 'POS':'Possessive ending', 'PRP':'Personal pronoun', 'PRP$':'Possessive Pronoun', 'RB':'Adverb',
+                          'RBR':'Comparative Adverb', 'RBS':'Superlative Adverb', 'RP':'Particle', 'SYM':'Symbol', 'TO':'to', 'UH':'Interjection', 'VB':'Verb', 'VBD':'Past Tense Verb', 'VBG':'Verb, Verb, gerund or present participle',
+                          'VBN':'Verb, past participle', 'VBP':'Verb, non-3rd person singular present', 'VBZ':'Verb, 3rd person singular present', 'WDT':'Wh-determiner', 'WP':'Wh-pronoun', 'WP$':'Possessive wh-pronoun', 'WRB':'Wh-adverb'
+                        }
     for word_dict in bigdiff_dic:
         s = []
         strm =[]
@@ -617,18 +612,27 @@ def analyze3(infile):
             else:
                 classname = dkey + '_' + '%s' % para
                 featureclass = classname + 'f'
-                if hiword[0] > 0:
-                    strmore = '<span onMouseOver="setfeaturecolor(\'%s\')" onmouseout="onMouseOut(\'%s\')" id ="%s">%s</span> ' % (
-                    classname, classname, featureclass, dkey)
-                    strm.append(strmore)
+                if dkey in feature_dictionary:
+                    keycontent= feature_dictionary[dkey]
+                    if hiword[0] > 0:
+                        strmore = '<span onMouseOver="setfeaturecolor(\'%s\')" onmouseout="onMouseOut(\'%s\')" id ="%s"><u style="color:#005ce6">%s</u></span> ' % (
+                            classname, classname, featureclass, keycontent)
+                        strm.append(strmore)
+                    else:
+                        strless = '<span onMouseOver="setfeaturecolor(\'%s\')" onmouseout="onMouseOut(\'%s\')" id ="%s"><u style="color:#005ce6">%s</u></span> ' % (
+                            classname, classname, featureclass, keycontent)
+                        strl.append(strless)
                 else:
-                    strless = '<span onMouseOver="setfeaturecolor(\'%s\')" onmouseout="onMouseOut(\'%s\')" id ="%s">%s</span> ' % (
-                        classname, classname, featureclass, dkey)
-                    strl.append(strless)
+                    if hiword[0] > 0:
+                        strmore = '<span onMouseOver="setfeaturecolor(\'%s\')" onmouseout="onMouseOut(\'%s\')" id ="%s"><u style="color:#005ce6">%s</u></span> ' % (
+                            classname, classname, featureclass, dkey)
+                        strm.append(strmore)
+                    else:
+                        strless = '<span onMouseOver="setfeaturecolor(\'%s\')" onmouseout="onMouseOut(\'%s\')" id ="%s"><u style="color:#005ce6">%s</u></span> ' % (
+                            classname, classname, featureclass, dkey)
+                        strl.append(strless)
         strmore = ', '.join(strm)
         strless = ', '.join(strl)
-        #print 'strmore', strmore
-        #print 'strless', strless
         str = ''
         if strmore:
             str = 'The paragraph above has many more %s than the one below.' % strmore
@@ -637,7 +641,7 @@ def analyze3(infile):
         s.append(str)
         s = ' '.join(s)
         if s:
-            content = '<div class="alert"> <span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span>%s </div>' % s
+            content = '<div class="alert"> %s </div>' % s
         alerts.append(content)
         para += 1
 
