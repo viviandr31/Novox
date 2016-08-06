@@ -1,6 +1,7 @@
-cdeditor
+ckeditor
 .idea
 *.csv
+*.pem
 
 # Compiled source #
 ###################
@@ -39,3 +40,7 @@ cdeditor
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+*.pyc
+
+*.pyc
