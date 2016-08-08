@@ -15,6 +15,8 @@ import unidecode
 import json
 from sklearn.metrics.pairwise import cosine_similarity
 import operator
+from django.conf import settings
+from os.path import join
 
 
 # features besides pos, exmaple words, unnecessary words
@@ -315,7 +317,7 @@ def analyze3(infile):
 
     # read the word list
     # word_file = open('wordlist.txt','r')
-    word_file = 'apps/nlp/tb/wordlist.txt'
+    word_file = join(settings.BASE_DIR, 'apps/nlp/tb/wordlist.txt')
     word_filef = open(word_file, 'rU')
     word_text = word_filef.read()
     wordlist = word_text.splitlines()
@@ -324,7 +326,7 @@ def analyze3(infile):
 
 
     # read the privateverbs.txt, containing the private verbs
-    prverb_file = 'apps/nlp/tb/privateverbs.txt'
+    prverb_file = join(settings.BASE_DIR, 'apps/nlp/tb/privateverbs.txt')
     prverb_filef = open(prverb_file, 'r')
     prverb_text = prverb_filef.read()
     private_verbs = prverb_text.splitlines()
@@ -332,7 +334,7 @@ def analyze3(infile):
     # print len(private_verbs)
 
     # read the publicverbs.txt, containing the public verbs
-    puberb_file = 'apps/nlp/tb/publicverbs.txt'
+    puberb_file = join(settings.BASE_DIR, 'apps/nlp/tb/publicverbs.txt')
     puberb_filef = open(puberb_file, 'r')
     puberb_text = puberb_filef.read()
     public_verbs = puberb_text.splitlines()
@@ -340,7 +342,7 @@ def analyze3(infile):
     # print len(public_verbs)
 
     # read the ishwords.txt, containing the ish downtoners
-    ish_file = 'apps/nlp/tb/ishwords.txt'
+    ish_file = join(settings.BASE_DIR, 'apps/nlp/tb/ishwords.txt')
     ish_filef = open(ish_file, 'r')
     ish_text = ish_filef.read()
     ish_words = ish_text.splitlines()
@@ -348,12 +350,12 @@ def analyze3(infile):
 
     # generate brown words freq dist
 
-    brown_pos_fdist = json.load(open("apps/nlp/tb/brown_pos_fdist.txt"))
-    brown_word_fdist = json.load(open("apps/nlp/tb/brown_word_fdist.txt"))
+    brown_pos_fdist = json.load(open(join(settings.BASE_DIR, "apps/nlp/tb/brown_pos_fdist.txt")))
+    brown_word_fdist = json.load(open(join(settings.BASE_DIR, "apps/nlp/tb/brown_word_fdist.txt")))
 
     # start processing each document
 
-    outpath_count = 'apps/nlp/tb/' + '/' + 'count_vector.csv'
+    outpath_count = join(settings.BASE_DIR, 'apps/nlp/tb', 'count_vector.csv')
 
     # read the MS word document into a string list
     document = Document(infile)
