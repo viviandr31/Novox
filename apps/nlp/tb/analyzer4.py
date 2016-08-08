@@ -355,7 +355,7 @@ def analyze3(infile):
 
     # start processing each document
 
-    outpath_count = join(settings.BASE_DIR, 'apps/nlp/tb', 'count_vector.csv')
+    outpath_count = join(settings.MEDIA_ROOT, 'count_vector.csv')
 
     # read the MS word document into a string list
     document = Document(infile)
