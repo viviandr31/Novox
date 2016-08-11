@@ -453,13 +453,13 @@ def analyze3(infile):
     bigdiff_dic = []
     feature_count = len(df_new.ix[:, 0:len(df_new.columns) - 4].values[0])
     # words = []
-    print len(df_new), len(text_tagged)
+    #print len(df_new), len(text_tagged)
     for i in range(0, len(df_new)):
         # print 'new'
         dic = {}
         bigdiffwords = []
         for j in range(feature_count):
-            if abs(df_new.ix[:, 0:len(df_new.columns) - 4].values[i][j]) >= 3 and df_new['CosineSimilarity'][i] < 0:
+            if abs(df_new.ix[:, 0:len(df_new.columns) - 4].values[i][j]) >= 2 and df_new['CosineSimilarity'][i] < 0:
                 dic[list(df_new)[j]] = [df_new.ix[:, 0:len(df_new.columns) - 4].values[i][j]]
                 # if list(df_new)[j] in postags:
                 # for m in range(len(text_tagged[i])):
@@ -481,6 +481,7 @@ def analyze3(infile):
         bigdiff_dic.append(dic)
     # print the big diff features into a feature
     df_new['BigDiffFeatures'] = ['|'.join(diff) for diff in bigdiff_feature]
+    #print 'bigdiff_feature', bigdiff_feature
 
     # para = 0
     # for word_dict in word_tagged_list:
@@ -564,8 +565,6 @@ def analyze3(infile):
             if pair[0] not in punctuations:
                 if match:
                     text += pair[0]
-                    print 'match', match
-                    print 'pair[0]', pair[0]
                 else:
                     if pair[0] == '``':
                         pair[0] = '\'\''
