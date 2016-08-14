@@ -10,8 +10,8 @@ from fabric.contrib.project import rsync_project
 
 
 env.user = 'ubuntu'
-env.domain = '54.200.101.157'
-env.hosts = ['54.200.101.157']
+env.domain = '54.200.114.254'
+env.hosts = ['54.200.114.254']
 
 env.proj_name = os.path.basename(os.path.dirname(__file__))
 env.proj_root = '/home/' + env.user + '/projects/'+ env.proj_name
@@ -86,4 +86,3 @@ def db_pull():
 def init_env():
     """init project site"""
     dj.setup()
-

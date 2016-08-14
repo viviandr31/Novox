@@ -302,6 +302,9 @@ def cvswrite_count(featuresets1, featuresets2, featuresets3, text, outpath):
 
 def analyze3(infile):
 
+    import cProfile, pstats, StringIO
+    pr = cProfile.Profile()
+    pr.enable()
     # all the POS tags
     postags = ['CC', 'CD', 'DT', 'EX', 'FW', 'IN', 'JJ', 'JJR', 'JJS', 'LS', 'MD', 'NN', 'NNS', 'NNP', 'NNPS', 'PDT',
                'POS', 'PRP', 'PRP$', 'RB', 'RBR', 'RBS', 'RP', 'SYM', 'TO', 'UH', 'VB', 'VBD', 'VBG', 'VBN', 'VBP',
@@ -310,6 +313,7 @@ def analyze3(infile):
 
     tags=postags + ['thatComplement','publicVerb', 'privateVerb', 'firstPersonPronouns', 'possibilityModal','downtoners','contractionwords','agentlessPassive']
     global public_verbs, private_verbs, ish_words
+
 
     # bipos_file = open('bipos.txt','r')
     # bipos_text = bipos_file.read()
@@ -655,8 +659,16 @@ def analyze3(infile):
             result.append(alerts[i])
     result.append(doc1[i + 1])
 
+    pr.disable()
+    # s = StringIO.StringIO()
+    opath = join(settings.MEDIA_ROOT, 'a.dmp')
+    s = open(opath, 'w')
+    sortby = 'cumulative'
+    ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+    ps.print_stats()
+    s.close()
+    # print s.getvalue()
+
     return result
 
     # result_file.close()
-
-
