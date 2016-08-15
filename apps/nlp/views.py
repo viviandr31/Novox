@@ -4,8 +4,6 @@ from django.template import RequestContext
 from .forms import DocumentForm
 from tb.analyzer4 import analyze3
 from datetime import datetime
-import nltk
-import nltk.data
 
 def get_time_tag():
     return datetime.today().strftime("%Y%m%d_%H%M")
@@ -13,6 +11,7 @@ def get_time_tag():
 
 def index(request):
     # Handle file upload
+    print "pre post"
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():

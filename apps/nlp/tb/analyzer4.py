@@ -54,10 +54,10 @@ def getWord(document):
                     doc[len(doc) - 1][3] += len(nltk.word_tokenize(run.text))
     return doc
 
+sent_detector = nltk.data.load('tokenizers/punkt/english.pickle')
 
 # transformed the document into tagged document
 def tag(paragraph):
-    sent_detector = nltk.data.load('tokenizers/punkt/english.pickle')
     # separate the paragraph into sentence list
     sent_list = sent_detector.tokenize(paragraph.strip())
     # POS tag each sentence [[(word,tag),(word,tag)...],#next sentence[(word,tag)...]..]
@@ -457,7 +457,7 @@ def analyze3(infile):
     bigdiff_dic = []
     feature_count = len(df_new.ix[:, 0:len(df_new.columns) - 4].values[0])
     # words = []
-    print len(df_new), len(text_tagged)
+    # print len(df_new), len(text_tagged)
     for i in range(0, len(df_new)):
         # print 'new'
         dic = {}
@@ -568,8 +568,8 @@ def analyze3(infile):
             if pair[0] not in punctuations:
                 if match:
                     text += pair[0]
-                    print 'match', match
-                    print 'pair[0]', pair[0]
+                    # print 'match', match
+                    # print 'pair[0]', pair[0]
                 else:
                     if pair[0] == '``':
                         pair[0] = '\'\''
