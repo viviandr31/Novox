@@ -54,10 +54,10 @@ def getWord(document):
                     doc[len(doc) - 1][3] += len(nltk.word_tokenize(run.text))
     return doc
 
+sent_detector = nltk.data.load('tokenizers/punkt/english.pickle')
 
 # transformed the document into tagged document
 def tag(paragraph):
-    sent_detector = nltk.data.load('tokenizers/punkt/english.pickle')
     # separate the paragraph into sentence list
     sent_list = sent_detector.tokenize(paragraph.strip())
     # POS tag each sentence [[(word,tag),(word,tag)...],#next sentence[(word,tag)...]..]
@@ -302,6 +302,9 @@ def cvswrite_count(featuresets1, featuresets2, featuresets3, text, outpath):
 
 def analyze3(infile):
 
+    import cProfile, pstats, StringIO
+    pr = cProfile.Profile()
+    pr.enable()
     # all the POS tags
     postags = ['CC', 'CD', 'DT', 'EX', 'FW', 'IN', 'JJ', 'JJR', 'JJS', 'LS', 'MD', 'NN', 'NNS', 'NNP', 'NNPS', 'PDT',
                'POS', 'PRP', 'PRP$', 'RB', 'RBR', 'RBS', 'RP', 'SYM', 'TO', 'UH', 'VB', 'VBD', 'VBG', 'VBN', 'VBP',
@@ -310,6 +313,7 @@ def analyze3(infile):
 
     tags=postags + ['thatComplement','publicVerb', 'privateVerb', 'firstPersonPronouns', 'possibilityModal','downtoners','contractionwords','agentlessPassive']
     global public_verbs, private_verbs, ish_words
+
 
     # bipos_file = open('bipos.txt','r')
     # bipos_text = bipos_file.read()
@@ -453,7 +457,7 @@ def analyze3(infile):
     bigdiff_dic = []
     feature_count = len(df_new.ix[:, 0:len(df_new.columns) - 4].values[0])
     # words = []
-    #print len(df_new), len(text_tagged)
+    # print len(df_new), len(text_tagged)
     for i in range(0, len(df_new)):
         # print 'new'
         dic = {}
@@ -654,8 +658,16 @@ def analyze3(infile):
             result.append(alerts[i])
     result.append(doc1[i + 1])
 
+    pr.disable()
+    # s = StringIO.StringIO()
+    opath = join(settings.MEDIA_ROOT, 'a.dmp')
+    s = open(opath, 'w')
+    sortby = 'cumulative'
+    ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+    ps.print_stats()
+    s.close()
+    # print s.getvalue()
+
     return result
 
     # result_file.close()
-
-
