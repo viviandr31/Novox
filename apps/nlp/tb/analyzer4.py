@@ -374,6 +374,7 @@ def analyze3(infile):
     # transform the tagged paragraph into ['word',['tag1','tag2'...]] style
     word_tagged_list = [tag_word(text) for text in text_tagged]
 
+
     # bieber features
     featuresets3 = []
     for k in range(len(text_tagged)):
@@ -485,7 +486,9 @@ def analyze3(infile):
         bigdiff_dic.append(dic)
     # print the big diff features into a feature
     df_new['BigDiffFeatures'] = ['|'.join(diff) for diff in bigdiff_feature]
-    #print 'bigdiff_feature', bigdiff_feature
+    print 'bigdiff_feature', bigdiff_feature
+    print 'bigdiff_dic', bigdiff_dic
+    print'word_tagged_list', word_tagged_list
 
     # para = 0
     # for word_dict in word_tagged_list:
@@ -517,7 +520,7 @@ def analyze3(infile):
                     for pair in word_tagged_list[i]:
                         if word in pair[1]:
                             classname = word + '_' + '%s' % para
-                            if len(pair[0]) < 20:
+                            if "span" not in pair[0]:
                                 pair[0] = '<span class ="%s">%s</span>' % (classname, pair[0])
                             else:
                                 s = pair[0].split('>')
@@ -528,7 +531,7 @@ def analyze3(infile):
                         if word in pair[1]:
                             a = para + 1
                             classname = word + '_' + '%s' % a
-                            if len(pair[0]) < 20:
+                            if "span" not in pair[0]:
                                 pair[0] = '<span class ="%s">%s</span>' % (classname, pair[0])
                             else:
                                 s = pair[0].split('>')
@@ -537,24 +540,24 @@ def analyze3(infile):
                                 pair[0] = '<span class ="%s %s">%s</span>' % (preclass[1], classname, w[0])
                 else:
                     for pair in word_tagged_list[i]:
-                        if word == pair[0].lower():
-                            classname = word + '_' + '%s' % para
-                            if len(pair[0]) < 20:
-                                pair[0] = '<span class ="%s">%s</span>' % (classname, pair[0])
-                            else:
-                                s = pair[0].split('>')
-                                w = s[1].split('<')
+                        classname = word + '_' + '%s' % para
+                        if "span" not in pair[0] and word == pair[0].lower():
+                            pair[0] = '<span class ="%s">%s</span>' % (classname, pair[0])
+                        elif "span" in pair[0]:
+                            s = pair[0].split('>')
+                            w = s[1].split('<')
+                            if word == w[0].lower():
                                 preclass = s[0].split('"')
                                 pair[0] = '<span class ="%s %s">%s</span>' % (preclass[1], classname, w[0])
                     for pair in  word_tagged_list[i + 1]:
-                        if word == pair[0].lower():
-                            a = para + 1
-                            classname = word + '_' + '%s' % a
-                            if len(pair[0]) < 20:
-                                pair[0] = '<span class ="%s">%s</span>' % (classname, pair[0])
-                            else:
-                                s = pair[0].split('>')
-                                w = s[1].split('<')
+                        a = para + 1
+                        classname = word + '_' + '%s' % a
+                        if "span" not in pair[0] and word == pair[0].lower():
+                            pair[0] = '<span class ="%s">%s</span>' % (classname, pair[0])
+                        elif "span" in pair[0]:
+                            s = pair[0].split('>')
+                            w = s[1].split('<')
+                            if word == w[0].lower():
                                 preclass = s[0].split('"')
                                 pair[0] = '<span class ="%s %s">%s</span>' % (preclass[1], classname, w[0])
             para = para + 1
